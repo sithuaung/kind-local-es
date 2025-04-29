@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-app2
+  namespace: laravel-apps
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: laravel-app2
+  template:
+    metadata:
+      labels:
+        app: laravel-app2
+    spec:
+      containers:
+      - name: laravel-app2
+        image: laravel-app2:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        env:
+        - name: APP_ENV
+          value: "production"
+        - name: APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: laravel-app2-secrets
+              key: app-key 
