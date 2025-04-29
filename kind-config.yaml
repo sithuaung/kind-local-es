@@ -15,5 +15,20 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
+  extraMounts:
+  - hostPath: ./app1
+    containerPath: /app1
+  - hostPath: ./app2
+    containerPath: /app2
 - role: worker
-- role: worker 
+  extraMounts:
+  - hostPath: ./app1
+    containerPath: /app1
+  - hostPath: ./app2
+    containerPath: /app2
+- role: worker
+  extraMounts:
+  - hostPath: ./app1
+    containerPath: /app1
+  - hostPath: ./app2
+    containerPath: /app2 

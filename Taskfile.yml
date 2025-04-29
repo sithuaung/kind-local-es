@@ -6,7 +6,51 @@ vars:
   GREETING: Hello, World!
 
 tasks:
-  initialize:
+  create-cluster:
     cmds:
-      - echo "{{.GREETING}}"
-    silent: true
+      - kind create cluster --config kind-config.yaml
+  
+  apply-configmaps:
+    cmds:
+      - kubectl apply -f k8s/
+
+  build-apps:
+    cmds:
+      - docker build -t app1:latest app1
+      - docker build -t app2:latest app2
+
+  load-apps:
+    cmds:
+      - kind load docker-image laravel-app1:latest
+      - kind load docker-image laravel-app2:latest
+
+  delete-app-pods: # delete the pods to force the app to be restarted
+    cmds:
+      - kubectl delete pods -n laravel-apps -l app=laravel-app1
+      - kubectl delete pods -n laravel-apps -l app=laravel-app2
+      - kubectl delete pod -n laravel-apps -l app=postgres
+
+  apply-app-deployments:
+    cmds:
+      - kubectl apply -f k8s/app1-deployment.yaml
+      - kubectl apply -f k8s/app2-deployment.yaml
+
+  apply-postgres:
+    cmds:
+      - kubectl apply -f k8s/postgres.yaml
+
+  setup-ingress-controller:
+    cmds:
+      - kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+
+  wait-for-ingress-controller:
+    cmds:
+      - kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
+
+  get-the-ingress-ip:
+    cmds:
+      - kubectl get service -n ingress-nginx ingress-nginx-controller
+          
+
+  
+  

@@ -28,9 +28,12 @@ spec:
             cpu: "500m"
         env:
         - name: APP_ENV
-          value: "production"
-        - name: APP_KEY
-          valueFrom:
-            secretKeyRef:
-              name: laravel-app2-secrets
-              key: app-key 
+          value: "local"
+        volumeMounts:
+        - name: app-source
+          mountPath: /var/www/html
+      volumes:
+      - name: app-source
+        hostPath:
+          path: /app2
+          type: Directory 
