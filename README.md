@@ -21,3 +21,8 @@ sudo cat /etc/hosts
 
 ### Access in browser
 Then we can access in browser with http://app1.local and https://app2.local
+
+
+
+### Fluentbit elasticsearch
+curl -X GET "http://localhost:9200/k8s-2025.04.30/_search?pretty"

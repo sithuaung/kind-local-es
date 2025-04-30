@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentbit-config
+  namespace: laravel-apps
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush        1
+        Daemon      Off
+        Log_Level   info
+
+    [INPUT]
+        Name        tail
+        Path        /var/log/containers/*.log
+        Parser      docker
+        Tag         kube.*
+        Mem_Buf_Limit 5MB
+        Skip_Long_Lines On
+
+    [FILTER]
+        Name        kubernetes
+        Match       kube.*
+        Merge_Log   On
+        Keep_Log    Off
+        K8S-Logging.Parser On
+        K8S-Logging.Exclude On
+
+    [OUTPUT]
+        Name        es
+        Match       kube.*
+        Host        elasticsearch
+        Port        9200
+        Index       fluentbit
+        Type        _doc
+        Logstash_Format On
+        Logstash_Prefix k8s
+        tls         Off
+        tls.verify  Off
+        Replace_Dots On
+        Retry_Limit False 

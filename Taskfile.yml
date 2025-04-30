@@ -50,7 +50,32 @@ tasks:
   get-the-ingress-ip:
     cmds:
       - kubectl get service -n ingress-nginx ingress-nginx-controller
-          
 
+  apply-elasticsearch:
+    cmds:
+      - kubectl apply -f k8s/elasticsearch.yaml
+
+  apply-fluentbit:
+    cmds:
+      - kubectl apply -f k8s/fluentbit-config.yaml
+      - kubectl apply -f k8s/fluentbit.yaml # Daemonset
+
+  port-forward-elasticsearch:
+    cmds:
+      - kubectl port-forward -n laravel-apps svc/elasticsearch 9200:9200 &
+
+  check-elasticsearch:
+    cmds:
+      - curl -X GET "http://localhost:9200/k8s-2025.04.30/_search?pretty"
+
+  apply-kibana:
+    cmds:
+      - kubectl apply -f k8s/kibana.yaml
   
-  
+  wait-for-kibana:
+    cmds:
+      - kubectl wait --namespace laravel-apps --for=condition=ready pod --selector=app=kibana --timeout=90s
+
+  port-forward-kibana:
+    cmds:
+      - kubectl port-forward -n laravel-apps svc/kibana 5601:5601 &
