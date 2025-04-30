@@ -8,21 +8,23 @@ This project sets up a local Kubernetes cluster using Kind with two Laravel appl
 - kubectl
 - Laravel applications in `app1` and `app2` directories
 
-## Setup Instructions
+## Setup Instructionhttps://github.com/sithuaung/kind-local-eshttps://github.com/sithuaung/kind-local-ess
 Just run the records in Taskfile.yaml like below one by one in order
 ```bash
 task {name-of-the-task}
 ```
 
-### Add these two records in /etc/hosts
+### Add these two records in `/etc/hosts` file
+```bash
 sudo cat /etc/hosts
+```
+```bash
 127.0.0.1 app1.local
 127.0.0.1 app2.local
+```
 
 ### Access in browser
 Then we can access in browser with http://app1.local and https://app2.local
 
-
-
-### Fluentbit elasticsearch
-curl -X GET "http://localhost:9200/k8s-2025.04.30/_search?pretty"
+### Access kibana
+http://localhost:5601

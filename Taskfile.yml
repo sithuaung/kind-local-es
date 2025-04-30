@@ -79,3 +79,7 @@ tasks:
   port-forward-kibana:
     cmds:
       - kubectl port-forward -n laravel-apps svc/kibana 5601:5601 &
+
+  apply-ingress: # this is to avoid having to portward
+    cmds:
+      - kubectl apply -f k8s/ingress.yaml
